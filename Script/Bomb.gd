@@ -37,15 +37,10 @@ func _on_Tween_tween_completed(object, key):
 		
 		if time < 0:
 			visible=false
-			$AudioStreamPlayer.play()
 			emit_signal("boom")
+			queue_free()
 	
 	t.invert()
 	$Tween.interpolate_property($Sprite, "modulate", null, t[0], time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.start()
-	pass # Replace with function body.
-
-
-func _on_AudioStreamPlayer_finished():
-	queue_free()
 	pass # Replace with function body.

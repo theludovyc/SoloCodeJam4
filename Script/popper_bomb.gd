@@ -6,11 +6,12 @@ var pref_bomb = preload("res://Scene/Bomb.tscn")
 # var a = 2
 # var b = "text"
 
-var bomb_take = false
+var bomb_take:bool
 
 func pop_bomb():
 	var b = pref_bomb.instance()
 	add_child(b)
+	bomb_take = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

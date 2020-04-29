@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Art/new_tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Art/player.png" type="Texture" id=2]
@@ -7,8 +7,9 @@
 [ext_resource path="res://Art/player_shadow.png" type="Texture" id=5]
 [ext_resource path="res://Art/key.png" type="Texture" id=6]
 [ext_resource path="res://Scene/Door.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Art/receiver.png" type="Texture" id=8]
+[ext_resource path="res://Scene/Receiver.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Script/popper_bomb.gd" type="Script" id=9]
+[ext_resource path="res://Art/barriere.png" type="Texture" id=10]
 
 [sub_resource type="CircleShape2D" id=5]
 radius = 4.29982
@@ -23,14 +24,15 @@ height = 2.40463
 [sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 4, 1 )
 
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 3, 11 )
+
 [node name="Game" type="YSort"]
 
 [node name="Sol" type="TileMap" parent="."]
 modulate = Color( 0, 0.290196, 0.501961, 1 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 8, 8 )
-collision_layer = 3
-collision_mask = 3
 format = 1
 tile_data = PoolIntArray( 65542, 4, 0, 65543, 4, 0, 65544, 4, 0, 65545, 4, 0, 65546, 4, 0, 65547, 4, 0, 65548, 4, 0, 65549, 4, 0, 65550, 4, 0, 65551, 4, 0, 65552, 4, 0, 65553, 4, 0, 65554, 4, 0, 65555, 4, 0, 65556, 4, 0, 65557, 4, 0, 65558, 4, 0, 65559, 4, 0, 65560, 4, 0, 65561, 4, 0, 65562, 4, 0, 65563, 4, 0, 65564, 4, 0, 65565, 4, 0, 65566, 4, 0, 131074, 4, 0, 131075, 4, 0, 131076, 4, 0, 131078, 4, 0, 131079, 4, 0, 131081, 4, 0, 131082, 4, 0, 131083, 4, 0, 131084, 4, 0, 131085, 4, 0, 131086, 4, 0, 196610, 4, 0, 196611, 4, 0, 196612, 4, 0, 196614, 4, 0, 196615, 4, 0, 196617, 4, 0, 196618, 4, 0, 196619, 4, 0, 196621, 4, 0, 196622, 4, 0, 262146, 4, 0, 262147, 4, 0, 262148, 4, 0, 262150, 4, 0, 262151, 4, 0, 262157, 4, 0, 262158, 4, 0, 327683, 4, 0, 327686, 4, 0, 327687, 4, 0, 327693, 4, 0, 327694, 4, 0, 393219, 4, 0, 393220, 4, 0, 393221, 4, 0, 393222, 4, 0, 393223, 4, 0, 458757, 4, 0, 524292, 4, 0, 524293, 4, 0, 524294, 4, 0, 589828, 4, 0, 589829, 4, 0, 589830, 4, 0, 655364, 4, 0, 655365, 4, 0, 655366, 4, 0 )
 
@@ -95,6 +97,11 @@ hframes = 3
 rotation = 1.5708
 shape = SubResource( 3 )
 
+[node name="Receiver" parent="." instance=ExtResource( 8 )]
+position = Vector2( 244, 8 )
+collision_layer = 3
+collision_mask = 3
+
 [node name="popper_bomb" type="Area2D" parent="."]
 position = Vector2( 84, 32.0748 )
 script = ExtResource( 9 )
@@ -105,10 +112,18 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="popper_bomb"]
 shape = SubResource( 6 )
 
-[node name="receiver" type="Sprite" parent="popper_bomb"]
-position = Vector2( 160, -20.0748 )
-texture = ExtResource( 8 )
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2( 132, 20 )
+
+[node name="barriere" type="Sprite" parent="StaticBody2D"]
+position = Vector2( 0, -8 )
+texture = ExtResource( 10 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 0, -8 )
+shape = SubResource( 7 )
 [connection signal="body_entered" from="Key" to="Key" method="_on_Key_body_entered"]
 [connection signal="open" from="Key" to="Door" method="_on_Key_open"]
 [connection signal="tween_completed" from="Key/Tween" to="Key" method="_on_Tween_tween_completed"]
+[connection signal="open" from="Receiver" to="Door2" method="_on_Key_open"]
 [connection signal="body_entered" from="popper_bomb" to="popper_bomb" method="_on_popper_bomb_body_entered"]
