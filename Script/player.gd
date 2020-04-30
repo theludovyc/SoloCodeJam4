@@ -73,17 +73,15 @@ func _on_Player_body_entered(body):
 		
 		var dir = body.global_position.direction_to(global_position)
 		
-		apply_central_impulse(dir*30)
+		apply_central_impulse(-linear_velocity + dir*20)
 		
-		var v = $Bomb
-		
-		if v != null:
-			v.explode()
+		if $Bomb != null:
+			$Bomb.explode()
 		
 		life -= 1
 		
 		if life <= 0:
-			queue_free()
+			get_tree().reload_current_scene()
 		
 		emit_signal("lose_life")
 		
