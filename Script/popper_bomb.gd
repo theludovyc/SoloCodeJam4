@@ -8,10 +8,13 @@ var pref_bomb = preload("res://Scene/Bomb.tscn")
 
 var bomb_take:bool
 
-func pop_bomb():
+func pop_bomb0():
 	var b = pref_bomb.instance()
 	add_child(b)
 	bomb_take = false
+
+func pop_bomb():
+	call_deferred("pop_bomb0")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

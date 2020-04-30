@@ -5,12 +5,22 @@ extends RigidBody2D
 # var a = 2
 # var b = "text"
 
+signal lose_life
+
+var life = 3
+
 const SPEED = 1.0
 
 var dir
 
+var t
+
+var b:bool
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	t = [modulate, Color(1, 0, 0)]
+	
 	pass # Replace with function body.
 
 
@@ -54,4 +64,36 @@ func _physics_process(delta):
 
 
 func _on_Player_body_entered(body):
+	if body.is_in_group("Blades"):
+		if $Tween.is_active():
+			$Tween.stop_all()
+		
+		$Tween.interpolate_property($Head, "modulate", t[0], t[1], 0.25, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		$Tween.start()
+		
+		var dir = body.global_position.direction_to(global_position)
+		
+		apply_central_impulse(dir*30)
+		
+		var v = $Bomb
+		
+		if v != null:
+			v.explode()
+		
+		life -= 1
+		
+		if life <= 0:
+			queue_free()
+		
+		emit_signal("lose_life")
+		
+		b=true
+	pass # Replace with function body.
+
+
+func _on_Tween_tween_completed(object, key):
+	if b:
+		$Tween.interpolate_property($Head, "modulate", t[1], t[0], 0.25, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		$Tween.start()
+		b = false
 	pass # Replace with function body.

@@ -28,6 +28,10 @@ func goToExplode():
 #func _process(delta):
 #	pass
 
+func explode():
+	visible=false
+	emit_signal("boom")
+	queue_free()
 
 func _on_Tween_tween_completed(object, key):
 	b = !b
@@ -36,11 +40,17 @@ func _on_Tween_tween_completed(object, key):
 		time -= 0.1
 		
 		if time < 0:
-			visible=false
-			emit_signal("boom")
-			queue_free()
+			explode()
 	
 	t.invert()
 	$Tween.interpolate_property($Sprite, "modulate", null, t[0], time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.start()
+	pass # Replace with function body.
+
+
+func _on_Bomb_body_entered(body):
+	print("hello")
+	
+	if body.is_in_group("Blades"):
+		explode()
 	pass # Replace with function body.
