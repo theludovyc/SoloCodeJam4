@@ -23,14 +23,17 @@ func _ready():
 #func _process(delta):
 #	pass
 
+func moveBomb(body):
+	var bomb = $Bomb
+	remove_child(bomb)
+	body.add_child(bomb)
+	bomb.connect("boom", self, "pop_bomb")
+	bomb.position.y -= 2
+	body.move_child(bomb, 1)
+	bomb_take = true
+
 func _on_popper_bomb_body_entered(body):
 	if !bomb_take:
 		if (body.name == "Player"):
-			var bomb = $Bomb
-			remove_child(bomb)
-			body.add_child(bomb)
-			bomb.connect("boom", self, "pop_bomb")
-			bomb.position.y -= 2
-			body.move_child(bomb, 1)
-			bomb_take = true
+			call_deferred("moveBomb", body)
 	pass # Replace with function body.

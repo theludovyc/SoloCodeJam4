@@ -22,13 +22,15 @@ func emit_open():
 	b = true
 	emit_signal("open")
 
+func moveBomb(body):
+	body.mode = RigidBody2D.MODE_STATIC
+	body.linear_velocity = Vector2.ZERO
+	body.sleeping=true
+	body.connect("boom", self, "emit_open")
+#	body.position = position
 
 func _on_Receiver_body_entered(body):
 	if (!b and body.is_in_group("Bombs")):
-		body.mode = RigidBody2D.MODE_STATIC
-		body.linear_velocity = Vector2.ZERO
-		body.sleeping=true
-		body.connect("boom", self, "emit_open")
-#		body.position = position
+		call_deferred("moveBomb", body)
 		
 	pass # Replace with function body.
